@@ -1,5 +1,4 @@
 const sql = require('mssql');
-require('dotenv').config({ path: '../.env' });
 
 // Create config object
 const config = {
