@@ -40,6 +40,10 @@ app.use((req, res, next) => {
 /* ********************************* IMPLEMENT HEALTH CHECK LATER DONT FEEL LIKE IT NOW ********************************* */
 
 // Routes
+const listRoutes = require('./routes/list.js');
+
+// Add routes
+app.use('/api/list', listRoutes);
 
 // Basic 404 handler
 app.use((req, res) => {
