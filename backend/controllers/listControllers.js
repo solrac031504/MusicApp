@@ -12,8 +12,7 @@ const getStreamingServices = async (req, res) => {
 
         // Return results
         res.json({
-            success: true,
-            data: result.recordset,
+            data: result.recordset
         });
     } catch (err) {
         console.error('Error fetching streaming services: ', err);

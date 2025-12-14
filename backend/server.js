@@ -41,9 +41,11 @@ app.use((req, res, next) => {
 
 // Routes
 const listRoutes = require('./routes/list.js');
+const loginRoutes = require('./routes/login.js');
 
 // Add routes
 app.use('/api/list', listRoutes);
+app.use('/api/user', loginRoutes);
 
 // Basic 404 handler
 app.use((req, res) => {
