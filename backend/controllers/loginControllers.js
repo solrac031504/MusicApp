@@ -1,18 +1,18 @@
 const { sql, poolPromise } = require('../database.js');
 const crypto = require('crypto');
 
-// Hash helper function
-const getSHA256Hash = async (password, salt) => {
+// Compute SHA256 hash
+function computeSHA256Hash(password, salt)
+{
     const input = password + '|' + salt;
 
-    const msgBuffer = new TextEncoder().encode(message);
+    // Convert to UTF-16LE buffer
+    const utf16Buffer = Buffer.from(input, 'utf16le');
 
-    const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+    // Hash
+    const hash = crypto.createHash('sha256').update(utf16Buffer).digest('hex');
 
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-
-    return '0x' + hashHex.toUpperCase();
+    return hash;
 }
 
 // User login
@@ -29,10 +29,13 @@ const loginUser = async (req, res) => {
             });
         }
 
-        // Get the sale from the environment
+        // Get the salt from the environment
         const salt = process.env.PASSWORD_SALT;
 
-        const hashPassword = await getSHA256Hash(password, salt);
+        const hashPassword = computeSHA256Hash(password, salt);
+
+        // Convert to buffer BINARY(32)
+        const passwordBuffer = Buffer.from(hashPassword, 'hex');
 
         // Get connection from pool
         const pool = await poolPromise;
@@ -40,25 +43,26 @@ const loginUser = async (req, res) => {
         // Login the user with the proc
         const result = await pool.request()
             .input('pUserName', sql.NVarChar(50), username)
-            .input('pPassword', sql.Binary(32), password)
-            .input('pLastOriginFrom', sql.NVarChar(50), originFrom)
-            .output('Authenticated', sql.Bit);
+            .input('pPassword', sql.Binary(32), passwordBuffer)
+            .input('pLastLoginOrigin', sql.NVarChar(50), originFrom)
+            .output('poAuthenticated', sql.Bit)
+            .execute('[user].LoginUser');
 
-        if (!result.output.Authenticated)
+        if (!result.output.poAuthenticated)
         {
             return res.status(401).json({
-                authenticated: result.output.Authenticated,
+                authenticated: result.output.poAuthenticated,
                 error: 'Invalid credentials'
             })
         }
 
         // Return results
         res.json({
-            authenticated: result.output.Authenticated
+            authenticated: result.output.poAuthenticated
         });
     } catch (err) {
-        console.error('Error attempting to login user');
-        res.status(500).json({ error: err });
+        console.error('Error attempting to login user:', err);
+        res.status(500).json({ error: 'An error occurred during login' });
     }
 };
 
