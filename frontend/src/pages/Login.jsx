@@ -37,7 +37,7 @@ const Login = () => {
 
         if (result.authenticated)
         {
-            alert('Successful login!');
+            navigate('/home');
         }
         else
         {
@@ -73,7 +73,7 @@ const Login = () => {
                     <button type="submit">Log In</button>
                 </form>
             </div>
-        );
+    );
 };
 
 export default Login;
