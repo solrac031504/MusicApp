@@ -1,8 +1,12 @@
 import sql, { ConnectionPool, config } from 'mssql';
 import dotenv from 'dotenv'
+import path from 'path';
 import { DatabaseConfig } from './types';
 
-dotenv.config({ path: '../.env' });
+// Env path
+const envPath = path.join(__dirname, '..', '..', '.env');
+
+dotenv.config({ path: envPath });
 
 export class Database {
     private static instance: Database;
@@ -21,10 +25,10 @@ export class Database {
 
     private getConfig(): config {
         const dbConfig: DatabaseConfig = {
-            server: process.env.DB_SERVER,
-            database: process.env.DB_NAME,
-            user: process.env.DB_USER,
-            password: process.env.DB_PASSWORD,
+            server: process.env.DB_SERVER!,
+            database: process.env.DB_NAME!,
+            user: process.env.DB_USER!,
+            password: process.env.DB_PASSWORD!,
             options: {
                 encrypt: true,
                 trustServerCertificate: false,
@@ -57,7 +61,7 @@ export class Database {
         }
     }
 
-    public get poolPromise(): Promise<ConnectionPool> {
+    public getPoolPromise(): Promise<ConnectionPool> {
         if (!this.poolPromise) {
             this.poolPromise = this.connect();
         }

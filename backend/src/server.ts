@@ -1,11 +1,11 @@
 import dotenv from 'dotenv';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
-// import { Database } from './database';
+import { Database } from './database';
 import { EnvVariables } from './types';
 
 // Load environment variables
-dotenv.config({ path: '../.env' });
+const envPath = path.join(__dirname, '..', '..', '.env');
 
 // Set environment variables
 const env: Partial<EnvVariables> = {
