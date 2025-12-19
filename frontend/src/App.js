@@ -4,6 +4,8 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 // pages and components
 import Login from './pages/Login';
 import Home from './pages/Home';
+import NotFound from './pages/NotFound';
+import ProtectedRoute from './components/ProtectedRoute';
 
 function App() {
   return (
@@ -13,8 +15,13 @@ function App() {
         <div className = "pages">
             <Routes>
                 <Route path="/" element={ <Login /> } />
-                <Route path="/home" element={ <Home /> } />
-                <Route path="*" element= { <h1>404: Page Not Found</h1> } />
+                <Route path="/home" element={ 
+                    <ProtectedRoute>
+                        <Home />
+                    </ProtectedRoute>
+                } />
+                { /* Redirect to login */ }
+                <Route path="*" element={ <NotFound /> } />
             </Routes>
         </div>
         </BrowserRouter>

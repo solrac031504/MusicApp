@@ -37,11 +37,18 @@ const Login = () => {
 
         if (result.authenticated)
         {
+            // Save auth data
+            sessionStorage.setItem('authToken', result.token || 'dummy-token');
+            sessionStorage.setItem('user', JSON.stringify({
+                username: username,
+                ...result.user
+            }));
+
             navigate('/home');
         }
         else
         {
-            alert('Incorrect credentials!');
+            alert(result.error || 'Incorrect credentials!');
         }
     }
 
