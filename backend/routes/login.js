@@ -5,7 +5,7 @@ const {
 
 const router = express.Router();
 
-// GET user login auth bool
-router.get('/login', loginUser);
+// POST user login auth bool
+router.post('/login', loginUser);
 
 module.exports = router;
