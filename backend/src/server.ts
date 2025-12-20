@@ -1,6 +1,7 @@
 import dotenv from 'dotenv';
 import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
+import path from 'path';
 import { Database } from './database';
 import { EnvVariables } from './types';
 
