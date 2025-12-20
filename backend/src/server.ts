@@ -52,10 +52,10 @@ declare global {
 
 /* ********************************* IMPLEMENT HEALTH CHECK LATER DONT FEEL LIKE IT NOW ********************************* */
 
-// import listRoutes from './routes/list';
+import listRoutes from './routes/list';
 import loginRoutes from './routes/login';
 
-// app.use('/api/list', listRoutes);
+app.use('/api/list', listRoutes);
 app.use('/api/user', loginRoutes);
 
 // 404 handler
