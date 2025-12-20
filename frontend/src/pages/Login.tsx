@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './login.css';
+import './main.css';
 
 // Types for API response
 interface LoginResponse {
@@ -71,12 +71,18 @@ const Login: React.FC = () => {
 
     // Return HTML content
     return (
-            <div className="login-container">
-                <h2>Login</h2>
-                {error && <div className="error-message" style={{ color: 'red' }}>{error}</div>}
-                <form onSubmit={handleSubmit}>
+        <div className="login-container">
+            <div className="login-card">
+                <div className="login-header">
+                    <h2>Welcome to Music App</h2>
+                    <p>Sign in to your account</p>
+                </div>
+
+                {error && <div className="error-message">{error}</div>}
+
+                <form className="login-form" onSubmit={handleSubmit}>
                     <div className="form-group">
-                        <label htmlFor="username">Username:</label>
+                        <label htmlFor="username">Username</label>
                         <input
                             id="username"
                             type="text"
@@ -87,8 +93,9 @@ const Login: React.FC = () => {
                             disabled={loading}
                         />
                     </div>
+
                     <div className="form-group">
-                        <label htmlFor="password">Password:</label>
+                        <label htmlFor="password">Password</label>
                         <input
                             id="password"
                             type="password"
@@ -99,11 +106,22 @@ const Login: React.FC = () => {
                             disabled={loading}
                         />
                     </div>
-                    <button type="submit" disabled={loading}>
-                        {loading ? 'Logging in...' : 'Log In'}
+
+                    <button
+                        type="submit"
+                        className="login-button"
+                        disabled={loading}
+                    >
+                        {loading ? (
+                            <>
+                                <span className="loading"></span>
+                                Logging in...
+                            </>
+                        ) : 'Log In'}
                     </button>
                 </form>
             </div>
+        </div>
     );
 };
 
