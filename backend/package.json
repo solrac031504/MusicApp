@@ -4,8 +4,10 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "build": "tsc",
+    "start": "node dist/server.js",
+    "dev": "nodemon --exec ts-node src/server.ts",
+    "type-check": "tsc --noEmit"
   },
   "keywords": [],
   "author": "Carlos Gonzalez",
@@ -19,6 +21,13 @@
     "mssql": "^12.2.0"
   },
   "devDependencies": {
-    "nodemon": "^3.1.11"
+    "@types/cors": "^2.8.19",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.6",
+    "@types/mssql": "^9.1.8",
+    "@types/node": "^25.0.3",
+    "nodemon": "^3.1.11",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.3"
   }
 }
