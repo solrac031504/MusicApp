@@ -45,8 +45,9 @@ const Login: React.FC = () => {
                 body: JSON.stringify(data)
             });
 
-            if (!response.ok) {
-                throw new Error(`HTTP error: status ${response.status}`);
+            // Throw HTTP error if response is not OK and NOT 401 forbidden
+            if (!response.ok && response.status !== 401) {
+               throw new Error(`HTTP error: status ${response.status}`);
             }
 
             const result: LoginResponse = await response.json();
@@ -54,13 +55,11 @@ const Login: React.FC = () => {
             if (result.authenticated) {
                 // Save auth data
                 sessionStorage.setItem('authToken', result.token || 'dummy-token');
-                sessionStorage.setItem('user', JSON.stringify({
-                    username: username,
-                }));
+                sessionStorage.setItem('user', username);
 
                 navigate('/home');
             } else {
-                setError(result.error || 'Incorrect credentials!');
+                setError(result.error || 'Invalid credentials');
             }
         } catch (err) {
             console.error('Login error:', err);
