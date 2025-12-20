@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import { FC } from 'react';
 
 // pages and components
 import Login from './pages/Login';
@@ -7,7 +8,7 @@ import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import ProtectedRoute from './components/ProtectedRoute';
 
-function App() {
+const App: FC = () => {
   return (
     <div className="App">
       <header className="App-header">
