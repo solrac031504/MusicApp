@@ -10,12 +10,16 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     
     // Check if the user is authenticated
     const isAuthenticated = (): boolean => {
-        // Check local storage
-        const token = sessionStorage.getItem('authToken');
+        // Get auth details from local storage
         const user = sessionStorage.getItem('user');
+        const loginExpiration = sessionStorage.getItem('loginExpiration');
 
-        // Return true if both token and user exist
-        return !!(token && user);
+        const loginExpirationDate = new Date(loginExpiration!);
+
+        const nowUTC = new Date();
+
+        // Return true if user exists AND now is before loginExpiration (in UTC)
+        return ((!!user) && (nowUTC <= loginExpirationDate));
     }
 
     if (!isAuthenticated()) {

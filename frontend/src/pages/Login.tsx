@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './main.css';
+import './login.css';
 
 // Types for API response
 interface LoginResponse {
     authenticated: boolean;
-    token: string;
+    loginExpiration?: Date;
+    admin?: boolean;
     error?: string;
 }
 
@@ -53,9 +54,17 @@ const Login: React.FC = () => {
             const result: LoginResponse = await response.json();
 
             if (result.authenticated) {
+                const loginExpiration = new Date(result.loginExpiration!);
+                const isAdmin = result.admin!;
+
                 // Save auth data
-                sessionStorage.setItem('authToken', result.token || 'dummy-token');
                 sessionStorage.setItem('user', username);
+                sessionStorage.setItem('loginExpiration', loginExpiration.toISOString());
+                sessionStorage.setItem('isAdmin', isAdmin.toString());
+
+                console.log(`user: ${username}`);
+                console.log(`loginExpiration: ${loginExpiration.toISOString()}`);
+                console.log(`isAdmin: ${isAdmin}`);
 
                 navigate('/home');
             } else {
