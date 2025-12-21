@@ -3,12 +3,6 @@ import crypto from 'crypto';
 import { sql } from '../database';
 import { LoginRequest, LoginResponse } from '../types';
 
-interface LoginProcResult {
-    output: {
-        poAuthenticated: boolean;
-    };
-}
-
 // Compute SHA256 hash
 function computeSHA256Hash(password: string, salt: string): string {
     const input = password + '|' + salt;
@@ -19,6 +13,9 @@ function computeSHA256Hash(password: string, salt: string): string {
 
 // User login
 export const loginUser = async (req: Request<{}, {}, LoginRequest>, res: Response<LoginResponse>): Promise<void> => {
+    // Error message. Overwritten after proc execution
+    let errorMessage = "An error occurred during login";
+
     try {
         // Get body params
         const { username, password, originFrom } = req.body;
@@ -27,6 +24,7 @@ export const loginUser = async (req: Request<{}, {}, LoginRequest>, res: Respons
         if (!username || !password) {
             res.status(400).json({
                 authenticated: false,
+                admin: false,
                 error: "Username and password are both required!"
             });
             return;
@@ -42,38 +40,41 @@ export const loginUser = async (req: Request<{}, {}, LoginRequest>, res: Respons
         const pool = await req.db.getPoolPromise();
 
         // Login user with proc
-        const request = await pool.request();
-
-        // Add inputs
-        request.input('pUserName', sql.NVarChar(50), username);
-        request.input('pPassword', sql.Binary, passwordBuffer);
-        request.input('pLastLoginOrigin', sql.NVarChar(50), originFrom);
-        
-        // Capture output
-        request.output('poAuthenticated', sql.Bit);
-
-        // Execute sproc
-        const result = await request.execute('[user].LoginUser');
+        const result = await pool.request()
+            .input('pUserName', sql.NVarChar(50), username)
+            .input('pPassword', sql.Binary, passwordBuffer)
+            .input('pLastLoginOrigin', sql.NVarChar(50), originFrom)
+            .output('poAuthenticated', sql.Bit)
+            .output('poAuthExpiration', sql.DateTime)
+            .output('poIsAdmin', sql.Bit)
+            .output('poErrorMessage', sql.NVarChar(255))
+            .execute('[user].LoginUser');
 
         const isAuthenticated = result.output.poAuthenticated as boolean;
+        const authExpiration = result.output.poAuthExpiration as Date;
+        const isAdmin = result.output.poIsAdmin as boolean;
+        errorMessage = result.output.poErrorMessage as string;
 
         if (!isAuthenticated) {
             res.status(401).json({
-                authenticated: false,
-                error: 'Invalid credentials'
+                authenticated: isAuthenticated,
+                error: errorMessage
             });
             return;
         }
 
         // Return results
         res.json({
-            authenticated: true
+            authenticated: isAuthenticated,
+            loginExpiration: authExpiration,
+            admin: isAdmin,
+            error: errorMessage
         });
     } catch (err) {
         console.error('Error attempting to login user:', err);
         res.status(500).json({
             authenticated: false,
-            error: 'An error occurred during login'
+            error: errorMessage
         });
     }
 };

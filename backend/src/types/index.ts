@@ -6,8 +6,8 @@ export interface LoginRequest {
 
 export interface LoginResponse {
     authenticated: boolean;
-    token?: string;
-    user?: string;
+    loginExpiration?: Date;
+    admin?: boolean;
     error?: string;
 }
 

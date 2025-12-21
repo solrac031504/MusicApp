@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigate, useLocation } from 'react-router-dom';
+import { isAuthenticated } from '../utilities/authentication'
 
 interface ProtectedRouteProps {
     children: React.ReactNode;
@@ -7,16 +8,6 @@ interface ProtectedRouteProps {
 
 const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     const location = useLocation();
-    
-    // Check if the user is authenticated
-    const isAuthenticated = (): boolean => {
-        // Check local storage
-        const token = sessionStorage.getItem('authToken');
-        const user = sessionStorage.getItem('user');
-
-        // Return true if both token and user exist
-        return !!(token && user);
-    }
 
     if (!isAuthenticated()) {
         // Redirect to login if not authenticated
