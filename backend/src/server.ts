@@ -54,9 +54,11 @@ declare global {
 
 import listRoutes from './routes/list';
 import loginRoutes from './routes/login';
+import genreRoutes from './routes/genre';
 
 app.use('/api/list', listRoutes);
 app.use('/api/user', loginRoutes);
+app.use('/api/genre', genreRoutes);
 
 // 404 handler
 app.use((req: Request, res: Response) => {
