@@ -1,28 +1,26 @@
 import { Request, Response } from 'express';
-import { sql } from '../database';
-import { LoginRequest, LoginResponse } from '../types';
 
-interface StreamingService {
-    ServiceId: number;
-    ServiceName: string;
+// All list data pretty much comes in like this
+interface ListData {
+    Id: number;
+    Name: string;
 };
 
-interface StreamingServiceResponse {
-    data: StreamingService[];
+interface ListResponse {
+    data: ListData[];
     error?: string;
 }
 
-export const getStreamingServices = async (req: Request, res: Response<StreamingServiceResponse>): Promise<void> => {
+export const getStreamingServices = async (req: Request, res: Response<ListResponse>): Promise<void> => {
     try {
         // Get connection from pool
         const pool = await req.db.getPoolPromise();
 
-        // Login user with proc
         const result = await pool.request()
             .execute('list.ListStreamingServices');
 
         // Type assertion
-        const services = result.recordset as StreamingService[];
+        const services = result.recordset as ListData[];
 
         // Return results
         res.json({
@@ -38,6 +36,35 @@ export const getStreamingServices = async (req: Request, res: Response<Streaming
         res.status(500).json({
             data: [],
             error: errorMessage
-        })
+        });
+    }
+};
+
+export const getGenres = async (req: Request, res: Response<ListResponse>): Promise<void> => {
+    try {
+        // Get connection from pool
+        const pool = await req.db.getPoolPromise();
+
+        const result = await pool.request()
+            .execute('list.ListGenres');
+
+        // Type assertion
+        const services = result.recordset as ListData[];
+
+        // Return results
+        res.json({
+            data: services
+        });
+    } catch (err) {
+        console.error('Error fetching streaming services:', err);
+
+        const errorMessage = err instanceof Error
+            ? err.message
+            : 'Unknown error occurred';
+
+        res.status(500).json({
+            data: [],
+            error: errorMessage
+        });
     }
 };
