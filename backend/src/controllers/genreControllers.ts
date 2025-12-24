@@ -1,30 +1,27 @@
 import { Request, Response } from 'express';
-import { sql } from '../database'
+import { sql } from '../database';
 
-interface GenreUpdateRequest {
-    genreId: number;
-    genreName: string;
-    genreDescription: string;
-    username: string;
-}
+// Import interfaces
+import { Genre } from '../types/entities'
+import {
+    ObjectRequest,
+    GenreUpdateRequest
+} from '../types/requests';
+import {
+    GenreResponse
+} from '../types/responses';
 
-interface GenreUpdateResponse {
-    genreId?: number;
-    genreName?: string;
-    genreDescription?: string;
-    error?: string;
-}
-
-export const updateGenre = async (req: Request<{}, {}, GenreUpdateRequest>, res: Response<GenreUpdateResponse>): Promise<void> => {
+export const updateGenre = async (req: Request<{}, {}, GenreUpdateRequest>, res: Response<GenreResponse>): Promise<void> => {
     try {
         // Get body params
-        const { genreId, genreName, genreDescription, username } = req.body;
+        const { id, name, description, username } = req.body;
 
-        if (genreId === -1) {
+        if (id === -1) {
             res.status(400).json({
-                genreId: genreId,
-                genreName: genreName,
-                genreDescription: genreDescription,
+                id: id,
+                name: name,
+                description: description,
+                hierarchy: [],
                 error: "You cannot update Unknown genre"
             });
             return;
@@ -35,9 +32,9 @@ export const updateGenre = async (req: Request<{}, {}, GenreUpdateRequest>, res:
 
         // Update table
         const result = await pool.request()
-            .input('pGenreId', sql.Int, genreId)
-            .input('pGenreName', sql.NVarChar(255), genreName)
-            .input('pGenreDescription', sql.NVarChar(4000), genreDescription)
+            .input('pGenreId', sql.Int, id)
+            .input('pGenreName', sql.NVarChar(255), name)
+            .input('pGenreDescription', sql.NVarChar(4000), description)
             .input('pUsername', sql.NVarChar(255), username)
             .query(`
                 UPDATE
@@ -55,9 +52,10 @@ export const updateGenre = async (req: Request<{}, {}, GenreUpdateRequest>, res:
 
         // Return results
         res.json({
-            genreId: genreId,
-            genreName: genreName,
-            genreDescription: genreDescription
+            id: id,
+            name: name,
+            description: description,
+            hierarchy: []
         })
     } catch (err) {
         console.error('Error updating genre:', err);
@@ -65,7 +63,74 @@ export const updateGenre = async (req: Request<{}, {}, GenreUpdateRequest>, res:
             ? err.message
             : "Unknown error";
         res.status(500).json({
+            id: -1,
+            name: '',
+            description: '',
+            hierarchy: [],
             error: errorMessage
         })
+    }
+};
+
+export const getSingleGenre = async(req: Request<{}, {}, ObjectRequest>, res: Response<GenreResponse>): Promise<void> => {
+    try {
+        // Get query param
+        const { id } = req.query;
+
+        // Get connection from pool
+        const pool = await req.db.getPoolPromise();
+
+        // Retrieve info from the DB
+        const result = await pool.request()
+            .input('pGenreId', sql.Int, id)
+            .query(`
+                SELECT
+                    g.GenreId
+                    ,g.GenreName
+                    ,g.[Description]
+                FROM
+                    dbo.Genre AS g
+                WHERE
+                    g.GenreId = @pGenreId
+            `);
+
+        if (result.recordset.length === 0) {
+            res.status(400).json({
+                id: -1,
+                name: '',
+                description: '',
+                hierarchy: [],
+                error: 'No genre exists'
+            });
+
+            return;
+        }
+
+        const genre: Genre = {
+            id: result.recordset[0].GenreId,
+            name: result.recordset[0].GenreName,
+            description: result.recordset[0].Description,
+            hierarchy: []
+        };
+
+        res.json({
+            id: genre.id,
+            name: genre.name,
+            description: genre.description,
+            hierarchy: genre.hierarchy
+        });
+
+    } catch (err) {
+        console.error('Error retrieving genre:', err);
+        const errorMessage = err instanceof Error
+            ? err.message
+            : "Unknown error";
+        res.status(500).json({
+            id: -1,
+            name: '',
+            description: '',
+            hierarchy: [],
+            error: errorMessage
+        });
     }
 };

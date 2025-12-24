@@ -1,7 +1,8 @@
 import { Request, Response } from 'express';
 import crypto from 'crypto';
 import { sql } from '../database';
-import { LoginRequest, LoginResponse } from '../types';
+import { LoginRequest } from '../types/requests';
+import { LoginResponse } from '../types/responses';
 
 // Compute SHA256 hash
 function computeSHA256Hash(password: string, salt: string): string {

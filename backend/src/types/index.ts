@@ -1,16 +1,3 @@
-export interface LoginRequest {
-    username: string;
-    password: string;
-    originFrom: string;
-}
-
-export interface LoginResponse {
-    authenticated: boolean;
-    loginExpiration?: Date;
-    admin?: boolean;
-    error?: string;
-}
-
 // DB config
 export interface DatabaseConfig {
     server: string;
