@@ -20,7 +20,7 @@ const Login: React.FC = () => {
 
     // Get base URL
     // const baseUrl = process.env.REACT_APP_BASE_URL;
-    const baseUrl = "http://localhost:5000"
+    const baseUrl = "http://localhost:5000";
 
     // Handle login
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {

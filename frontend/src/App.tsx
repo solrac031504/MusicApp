@@ -6,6 +6,8 @@ import { FC } from 'react';
 import Login from './pages/Login';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
+import Genre from './pages/Genre';
+import GenreList from './pages/GenreList';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';
@@ -22,6 +24,16 @@ const App: FC = () => {
             <Route path="/home" element={ 
               <ProtectedRoute>
                 <Home />
+              </ProtectedRoute>
+            } />
+            <Route path="/genres" element={
+              <ProtectedRoute>
+                <GenreList />
+              </ProtectedRoute>
+            } />
+            <Route path="/genre/:id" element={
+              <ProtectedRoute>
+                <Genre />
               </ProtectedRoute>
             } />
             <Route path="/secret" element={
