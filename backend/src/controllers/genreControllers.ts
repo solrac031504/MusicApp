@@ -80,7 +80,7 @@ export const getSingleGenre = async(req: Request<{}, {}, ObjectRequest>, res: Re
         // Get connection from pool
         const pool = await req.db.getPoolPromise();
 
-        // Retrieve info from the DB
+        // Retrieve genre info from the DB
         const result = await pool.request()
             .input('pGenreId', sql.Int, id)
             .query(`
@@ -106,11 +106,28 @@ export const getSingleGenre = async(req: Request<{}, {}, ObjectRequest>, res: Re
             return;
         }
 
+        // Retrieve hierarchy info
+        const hierarchyResult = await pool.request()
+            .input('pGenreId', sql.Int, id)
+            .query(`
+                SELECT
+                    vgh.HierarchyPath
+                FROM
+                    dbo.vwGenreHierarchy AS vgh
+                WHERE
+                    vgh.GenreId = @pGenreId
+            `);
+
+        // Push hierarchy paths into array
+        let hierarchyPath: string[] = [];
+
+        hierarchyResult.recordset.forEach(row => hierarchyPath.push(row.HierarchyPath));
+
         const genre: Genre = {
             id: result.recordset[0].GenreId,
             name: result.recordset[0].GenreName,
             description: result.recordset[0].Description,
-            hierarchy: []
+            hierarchy: hierarchyPath
         };
 
         res.json({
