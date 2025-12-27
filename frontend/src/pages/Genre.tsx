@@ -37,11 +37,14 @@ const Genre: React.FC = () => {
         }
     };
 
-    let genreId: number = isNaN(Number(id))
-        ? -1
-        : parseInt(id!);
+    // Get the genres
+    useEffect(() => {
+        let genreId: number = isNaN(Number(id))
+            ? -1
+            : parseInt(id!);
 
-    getGenre(genreId);
+        getGenre(genreId);
+    }, []);
 
     return (
         <div className="genre-container">

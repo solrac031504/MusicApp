@@ -58,7 +58,10 @@ const GenreList: React.FC = () => {
         }
     };
 
-    getGenreList();
+    // Use useEffect to call getGenreList only once on component mount
+    useEffect(() => {
+        getGenreList();
+    }, []); // Empty dependency array means it runs only once
 
     return (
         <div className="genres-container">
@@ -71,9 +74,9 @@ const GenreList: React.FC = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {genres!.data.map((result, index) => (
-                            <tr key={index}>
-                                <td>{result.name}</td>
+                        {genres!.data.map((result) => (
+                            <tr key={result.id}>
+                                <td><a href={`/genre/${result.id}`}>{result.name}</a></td>
                             </tr>
                         ))}
                     </tbody>
