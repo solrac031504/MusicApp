@@ -5,6 +5,7 @@ interface GenreObject {
     name: string;
     description: string;
     hierarchy: string[];
+    error?: string;
 }
 
 const Genre: React.FC = () => {
@@ -14,11 +15,14 @@ const Genre: React.FC = () => {
     const [genreName, setGenreName] = useState<string>('');
     const [genreDescription, setGenreDescription] = useState<string>('');
     const [genreHierarchy, setGenreHierarchy] = useState<string[]>([]);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
     
     const baseUrl = "http://localhost:5000";
 
     const getGenre = async (genreId: number): Promise<void> => {
         try {
+            setIsLoading(true);
+
             const response = await fetch(`${baseUrl}/api/genre/?id=${genreId}`);
 
             const result = await response.json();
@@ -33,7 +37,13 @@ const Genre: React.FC = () => {
             setGenreDescription(genre.description);
             setGenreHierarchy(genre.hierarchy);
         } catch (err) {
+            console.error("Error retrieving genre info:", err);
 
+            const errorMessage = err instanceof Error
+                ? err.message
+                : "Unknown error";
+        } finally {
+            setIsLoading(false);
         }
     };
 

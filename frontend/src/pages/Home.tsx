@@ -11,6 +11,7 @@ const Home: React.FC = () => {
             <nav className="navbar navbar-expand-lg navbar-light bg-light">
                 <div className="container-fluid">
                     <span className="navbar-brand">Music App</span>
+                    <span className="navbar-brand"><a href="/genres">Genres</a></span>
                 </div>
             </nav>
 

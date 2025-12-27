@@ -21,6 +21,8 @@ const GenreList: React.FC = () => {
     // Get the genres
     const getGenreList = async (): Promise<void> => {
         try {
+            setIsLoading(true);
+
             const response = await fetch(`${baseUrl}/api/list/genres`)
             const result = await response.json();
 
@@ -55,6 +57,8 @@ const GenreList: React.FC = () => {
                 data: [],
                 error: errorMessage
             };
+        } finally {
+            setIsLoading(false);
         }
     };
 
@@ -62,6 +66,10 @@ const GenreList: React.FC = () => {
     useEffect(() => {
         getGenreList();
     }, []); // Empty dependency array means it runs only once
+
+    if (isLoading) {
+        return <div>Loading...</div>
+    }
 
     return (
         <div className="genres-container">
