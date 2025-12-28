@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+// Styles
+import styles from './GenreList.module.css';
+
 interface ListData {
     id: number;
     name: string;
@@ -72,19 +75,26 @@ const GenreList: React.FC = () => {
     }
 
     return (
-        <div className="genres-container">
-            <main className="container mt-4">
+        <div className={styles.container}>
+            <main className={styles.title}>
                 <h1>Genres</h1>
-                <table>
-                    <thead>
+                <table className={styles.table}>
+                    <thead className={styles.tableHeader}>
                         <tr>
-                            <th>Genre</th>
+                            <th className={styles.headerCell}>Genre</th>
                         </tr>
                     </thead>
                     <tbody>
-                        {genres!.data.map((result) => (
-                            <tr key={result.id}>
-                                <td><a href={`/genre/${result.id}`}>{result.name}</a></td>
+                        {genres!.data.map((genre) => (
+                            <tr key={genre.id} className={styles.row}>
+                                <td className={styles.cell}>
+                                    <a 
+                                        href={`/genre/${genre.id}`} 
+                                        className={styles.genreLink}
+                                    >
+                                        {genre.name}
+                                    </a>
+                                </td>
                             </tr>
                         ))}
                     </tbody>
