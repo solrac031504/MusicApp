@@ -3,11 +3,11 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FC } from 'react';
 
 // Pages
-import Login from './pages/Login';
-import Home from './pages/Home';
-import NotFound from './pages/NotFound';
-import Genre from './pages/Genre';
-import GenreList from './pages/GenreList';
+import Login from './pages/Login/Login';
+import Home from './pages/Home/Home';
+import NotFound from './pages/NotFound/NotFound';
+import Genre from './pages/Genre/Genre';
+import GenreList from './pages/GenreList/GenreList';
 
 // Components
 import ProtectedRoute from './components/ProtectedRoute';

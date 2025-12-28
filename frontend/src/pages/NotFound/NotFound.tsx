@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { isAuthenticated } from '../utilities/authentication';
+import { isAuthenticated } from '../../utilities/authentication';
 
 const NotFound: React.FC = () => {
     const navigate = useNavigate(); 

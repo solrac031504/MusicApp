@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './login.css';
+
+// Styles
+import '../../styles/global.css';
+import styles from './Login.module.css';
 
 // Types for API response
 interface LoginResponse {
@@ -80,19 +83,20 @@ const Login: React.FC = () => {
 
     // Return HTML content
     return (
-        <div className="login-container">
-            <div className="login-card">
-                <div className="login-header">
-                    <h2>Welcome to Music App</h2>
-                    <p>Sign in to your account</p>
+        <div className={styles.container}>
+            <div className={styles.card}>
+                <div className={styles.header}>
+                    <h2 className={styles.title}>Welcome to Music App (name WIP lol)</h2>
+                    <p className={styles.subtitle}>Sign in to your account</p>
                 </div>
 
-                {error && <div className="error-message">{error}</div>}
+                {error && <div className={styles.errorMessage}>{error}</div>}
 
-                <form className="login-form" onSubmit={handleSubmit}>
-                    <div className="form-group">
-                        <label htmlFor="username">Username</label>
+                <form className={styles.form} onSubmit={handleSubmit}>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label} htmlFor="username">Username</label>
                         <input
+                            className={styles.input}
                             id="username"
                             type="text"
                             value={username}
@@ -103,9 +107,10 @@ const Login: React.FC = () => {
                         />
                     </div>
 
-                    <div className="form-group">
-                        <label htmlFor="password">Password</label>
+                    <div className={styles.formGroup}>
+                        <label className={styles.label} htmlFor="password">Password</label>
                         <input
+                            className={styles.input}
                             id="password"
                             type="password"
                             value={password}
@@ -117,8 +122,8 @@ const Login: React.FC = () => {
                     </div>
 
                     <button
+                        className={styles.button}
                         type="submit"
-                        className="login-button"
                         disabled={loading}
                     >
                         {loading ? (
