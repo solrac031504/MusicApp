@@ -7,19 +7,6 @@
     box-sizing: border-box;
 }
 
-/* Link Styles */
-a:link {
-    color: blue;
-}
-
-a:hover {
-    color: rgb(4, 4, 118);
-}
-
-a:visited {
-    color: rgb(115, 16, 115);
-}
-
 /* Body Styles */
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
