@@ -19,6 +19,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v6
 
+      - name: Verify again
+        run: ls
+
       - name: Navigate to backend
         run: cd backend
 
