@@ -18,18 +18,6 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v6
-
-      - name: Verify again
-        run: ls
-
-      - name: Navigate to backend
-        run: cd backend
-
-      - name: Verify directory
-        run: pwd
-
-      - name: Verify again
-        run: ls
                 
       - name: Use Node.js
         uses: actions/setup-node@v4
@@ -37,10 +25,10 @@ jobs:
           node-version: '25.x'
 
       - name: Install dependencies
-        run: npm install
+        run: cd backend && npm install
 
       - name: Type check
-        run: npm run type-check
+        run: cd backend && npm run type-check
 
   frontend-validation:
     runs-on: ubuntu-latest
