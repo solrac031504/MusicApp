@@ -1,0 +1,48 @@
+name: MusicApp CI
+
+on:
+  pull_request:
+    branches:
+        - master
+    types:
+        - opened
+        - synchronize
+        - reopened
+  push:
+    branches:
+        - '*'
+
+jobs:
+  backend-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+                
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25.x'
+
+      - name: Install dependencies
+        run: cd backend && npm install
+
+      - name: Type check
+        run: cd backend && npm run type-check
+
+  frontend-validation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+                
+      - name: Use Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '25.x'
+
+      - name: Install dependencies
+        run: cd frontend && npm install
+
+      - name: Type check
+        run: cd frontend && npm run type-check
