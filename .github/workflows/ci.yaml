@@ -21,6 +21,9 @@ jobs:
 
       - name: Navigate to backend
         run: cd backend
+
+      - name: Verify directory
+        run: pwd
                 
       - name: Use Node.js
         uses: actions/setup-node@v4
